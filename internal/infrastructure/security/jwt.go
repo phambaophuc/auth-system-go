@@ -24,12 +24,12 @@ type Claims struct {
 func NewJWTManager(secret, accessTTL, refreshTTL string) (*JWTManager, error) {
 	accessDuration, err := time.ParseDuration(accessTTL)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid access token TTL: %w", err)
+		return nil, fmt.Errorf("invalid access token TTL: %w", err)
 	}
 
 	refreshDuration, err := time.ParseDuration(refreshTTL)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid refresh token TTL: %w", err)
+		return nil, fmt.Errorf("invalid refresh token TTL: %w", err)
 	}
 
 	return &JWTManager{
@@ -72,7 +72,7 @@ func (j *JWTManager) generateToken(userID uint, email, tokenType string, ttl tim
 func (j *JWTManager) ValidateToken(tokenString string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 		return []byte(j.secretKey), nil
 	})
@@ -83,7 +83,7 @@ func (j *JWTManager) ValidateToken(tokenString string) (*Claims, error) {
 
 	claims, ok := token.Claims.(*Claims)
 	if !ok || !token.Valid {
-		return nil, fmt.Errorf("Invalid token")
+		return nil, fmt.Errorf("invalid token")
 	}
 
 	return claims, nil
